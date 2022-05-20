@@ -34,17 +34,16 @@ message commentResponse {
   BaseResponse base_resp = 1;
 }
 
-message commentListReq {
-  int64 user_id = 1; // 用户 ID
-  int64 video_id = 2; // 视频 ID
+message commentListRequest {
+  int64 video_id = 1; // 视频 ID
 }
 
-message commentListRep {
+message commentListResponse {
   repeated Comment comment_list = 1; // 评论列表
   BaseResponse base_rep = 2; // 状态信息
 }
 
 service CommentVideoServer {
   rpc Comment (commentRequest) returns (commentResponse) {}
-  rpc List (commentListReq) returns (commentListRep) {}
+  rpc List (commentListRequest) returns (commentListResponse) {}
 }

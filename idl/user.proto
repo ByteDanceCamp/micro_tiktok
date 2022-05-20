@@ -1,0 +1,51 @@
+syntax = "proto3";
+package user.core;
+option go_package = "user";
+
+message User {
+  int64 id = 1; // 用户ID
+  string name = 2; // 用户名
+  optional int64 follow_count = 3; // 关注总数
+  optional int64 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // 是否关注，true：关注；false：未关注
+}
+
+message BaseResponse {
+  int32 status_code = 1;
+  string status_msg = 2;
+}
+
+message CreateUserRequest {
+  string username = 1; // 昵称，最大长度 80 个字符
+  string password = 2; // 密码，最长 32 个字符，支持数字、大小写字母、标点符号 （例如 Abcd,123，但不允许 <、>、' 等)， 不允许有空格。
+}
+
+message CreateUserResponse {
+  int64 user_id = 1;
+  BaseResponse base_resp = 2;
+}
+
+message MGetUserRequest {
+  repeated int64 user_ids = 1; // 用户 ID 的数组
+}
+
+message MGetUserResponse {
+  repeated User users = 1; // 用户信息列表
+  BaseResponse base_resp = 2;
+}
+
+message CheckUserRequest{
+  string user_name = 1;
+  string password = 2;
+}
+
+message CheckUserResponse{
+  int64 user_id = 1;
+  BaseResponse base_resp = 2;
+}
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+  rpc MGetUser (MGetUserRequest) returns (MGetUserResponse) {}
+  rpc CheckUser (CheckUserRequest) returns (CheckUserResponse) {}
+}

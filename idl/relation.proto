@@ -1,0 +1,41 @@
+syntax = "proto3";
+package relation;
+option go_package = "relation";
+
+message User {
+  int64 id = 1; // 用户ID
+  string name = 2; // 用户名
+  optional int64 follow_count = 3; // 关注总数
+  optional int64 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // 是否关注，true：关注；false：未关注
+}
+
+message BaseResponse {
+  int32 status_code = 1; // 状态码
+  string status_msg = 2; // 状态信息
+}
+
+message relationRequest {
+  int64 user_id = 1; // 用户 ID
+  int64 to_user_id = 2; // 目标用户 ID
+  int32 action_type = 3; // 操作类型，1：关注；2：取关
+}
+
+message relationResponse {
+  BaseResponse base_resp = 1;
+}
+
+message listRequest {
+  int64 user_id = 1; // 用户 ID
+  int32 action_type = 2; // 操作类型，1：获取关注列表；2：获取粉丝列表
+}
+
+message listResponse {
+  repeated User user_list = 1; // 用户列表
+  BaseResponse base_rep = 2; // 状态信息
+}
+
+service RelationServer {
+  rpc RelationAction (relationRequest) returns (relationResponse) {}
+  rpc List (listRequest) returns (listResponse) {}
+}

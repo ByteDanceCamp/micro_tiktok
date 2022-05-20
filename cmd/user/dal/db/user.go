@@ -22,7 +22,7 @@ func Create(ctx context.Context, user *User) error {
 }
 
 // MGet 批量获取用户信息
-func MGet(ctx context.Context, ids []uint) ([]*User, error) {
+func MGet(ctx context.Context, ids []int64) ([]*User, error) {
 	res := make([]*User, 0)
 	if len(ids) == 0 {
 		return res, nil

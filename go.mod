@@ -4,7 +4,10 @@ go 1.16
 
 require (
 	github.com/cloudwego/kitex v0.3.1
+	github.com/go-playground/validator/v10 v10.11.0
 	github.com/kitex-contrib/registry-etcd v0.0.0-20220110034026-b1c94979cea3
+	github.com/kitex-contrib/tracer-opentracing v0.0.2
+	github.com/opentracing/opentracing-go v1.2.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.uber.org/atomic v1.9.0 // indirect
 	google.golang.org/protobuf v1.28.0

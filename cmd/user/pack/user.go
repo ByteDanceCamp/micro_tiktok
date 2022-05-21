@@ -17,12 +17,12 @@ func User(u *db.User) *user.User {
 }
 
 // Users pack list of user info
-func Users(us []*db.User) []*user.User {
-	users := make([]*user.User, 0)
-	for _, u := range us {
+func Users(users []*db.User) []*user.User {
+	us := make([]*user.User, 0)
+	for _, u := range users {
 		if user2 := User(u); user2 != nil {
-			users = append(users, user2)
+			us = append(us, user2)
 		}
 	}
-	return users
+	return us
 }

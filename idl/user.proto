@@ -11,7 +11,7 @@ message User {
 }
 
 message BaseResponse {
-  int32 status_code = 1;
+  int64 status_code = 1;
   string status_msg = 2;
 }
 
@@ -35,7 +35,7 @@ message MGetUserResponse {
 }
 
 message CheckUserRequest{
-  string user_name = 1;
+  string username = 1;
   string password = 2;
 }
 

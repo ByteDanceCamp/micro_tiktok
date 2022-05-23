@@ -7,16 +7,17 @@ import (
 
 const (
 	SuccessCode     = 0
-	ServiceErrCode  = 10000
-	UserErrCode     = 20000
-	VideoErrCode    = 30000
-	FavoriteErrCode = 40000
-	CommentErrCode  = 50000
-	RelationErrCode = 60000
+	ParamsErrCode   = 10000
+	ServiceErrCode  = 20000
+	UserErrCode     = 30000
+	VideoErrCode    = 40000
+	FavoriteErrCode = 50000
+	CommentErrCode  = 60000
+	RelationErrCode = 70000
 )
 
 type ErrNo struct {
-	ErrCode int32
+	ErrCode int64
 	ErrMsg  string
 }
 
@@ -24,12 +25,13 @@ func (e ErrNo) Error() string {
 	return fmt.Sprintf("err_code=%d, err_msg=%s", e.ErrCode, e.ErrMsg)
 }
 
-func NewErrNo(errCode int32, errMsg string) ErrNo {
+func NewErrNo(errCode int64, errMsg string) ErrNo {
 	return ErrNo{errCode, errMsg}
 }
 
 var (
 	Success     = NewErrNo(SuccessCode, "Success")
+	ParamsErr   = NewErrNo(ParamsErrCode, "params have some problem")
 	ServiceErr  = NewErrNo(ServiceErrCode, "Service is unable to start successfully")
 	UserErr     = NewErrNo(UserErrCode, "User server has some problem")
 	VideoErr    = NewErrNo(VideoErrCode, "Video server has some problem")

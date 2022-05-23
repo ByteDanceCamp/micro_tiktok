@@ -8,8 +8,8 @@ import (
 
 type User struct {
 	gorm.Model
-	UserName string `json:"username"`
-	PassWord string `json:"password"`
+	UserName string `json:"username" gorm:"unique; not null; type: varchar(80)"`
+	PassWord string `json:"password" gorm:"not null; type: varchar(64)"`
 }
 
 func (u *User) TableName() string {
@@ -17,8 +17,11 @@ func (u *User) TableName() string {
 }
 
 // Create 新建用户，将新记录插入数据库
-func Create(ctx context.Context, user *User) error {
-	return DB.WithContext(ctx).Create(user).Error
+func Create(ctx context.Context, user *User) (*User, error) {
+	if err := DB.WithContext(ctx).Create(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 // MGet 批量获取用户信息
@@ -36,9 +39,9 @@ func MGet(ctx context.Context, ids []int64) ([]*User, error) {
 
 // QueryUser 根据用户名获取用户信息
 func QueryUser(ctx context.Context, username string) (*User, error) {
-	user := User{}
+	user := &User{}
 	if err := DB.WithContext(ctx).Where("user_name = ?", username).Take(&user).Error; err != nil {
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }

@@ -2,9 +2,12 @@ package constants
 
 const (
 	TablePre        = "ds_"
+	APIServiceName  = "api_service"
 	UserServiceName = "user_service"
 	UserTableName   = TablePre + "user"
 	UserSalt        = "ByteDanceCamp"
-	EtcdAddress     = "127.0.0.1:2379"
-	MySQLDefaultDSN = "gorm:gorm@tcp(localhost:13306)/gorm?charset=utf8&parseTime=True&loc=Local"
+	JWTSecretKey    = "ByteDanceCamp3"
+	IdentityKey     = "uid"
+	EtcdAddress     = "127.0.0.1:12379"
+	MySQLDefaultDSN = "mtt:4&o4csZZ^OMDiy1Q@tcp(localhost:13306)/micro_tiktok?charset=utf8&parseTime=True&loc=Local"
 )

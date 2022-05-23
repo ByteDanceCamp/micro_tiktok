@@ -3,8 +3,10 @@ module micro_tiktok
 go 1.16
 
 require (
+	github.com/appleboy/gin-jwt/v2 v2.8.0
 	github.com/cloudwego/kitex v0.3.1
-	github.com/go-playground/validator/v10 v10.11.0
+	github.com/gin-gonic/gin v1.7.7
+	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/kitex-contrib/registry-etcd v0.0.0-20220110034026-b1c94979cea3
 	github.com/kitex-contrib/tracer-opentracing v0.0.2
 	github.com/opentracing/opentracing-go v1.2.0

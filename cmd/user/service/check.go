@@ -21,17 +21,18 @@ func NewCheckService(ctx context.Context) *CheckService {
 	}
 }
 
-func (c *CheckService) Check(req *user.CheckUserRequest) (int64, error) {
+func (c *CheckService) Check(req *user.CheckUserRequest) (uid int64, err error) {
 	h := sha256.New()
-	if _, err := io.WriteString(h, req.Password+constants.UserSalt); err != nil {
+	if _, err = io.WriteString(h, req.Password+constants.UserSalt); err != nil {
 		return 0, err
 	}
-	password := fmt.Sprintf("%v", h.Sum(nil))
-	username := req.UserName
+	password := fmt.Sprintf("%x", h.Sum(nil))
+	username := req.Username
 	u, err := db.QueryUser(c.ctx, username)
 	if err != nil {
 		return 0, err
 	}
+
 	if u.PassWord != password {
 		return 0, errno.UserErr.WithMsg("username or password is wrong")
 	}

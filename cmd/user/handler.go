@@ -16,11 +16,13 @@ func (s *UserServiceImpl) CreateUser(ctx context.Context, req *user.CreateUserRe
 	resp = new(user.CreateUserResponse)
 	// TODO: validate the params...
 
-	err = service.NewCreateService(ctx).Create(req)
+	usr, err := service.NewCreateService(ctx).Create(req)
 	if err != nil {
 		resp.BaseResp = pack.BuildBaseResp(err)
 		return resp, nil
 	}
+	resp.BaseResp = pack.BuildBaseResp(errno.Success)
+	resp.UserId = usr.Id
 	return resp, nil
 }
 

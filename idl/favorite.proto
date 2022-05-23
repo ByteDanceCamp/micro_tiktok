@@ -38,7 +38,6 @@ message favoriteResponse {
 
 message favoriteListRequest {
   int64 user_id = 1; // 用户 ID
-  string token = 2; // 鉴权 token
 }
 
 message favoriteListResponse {

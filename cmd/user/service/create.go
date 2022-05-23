@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 	"io"
 	"micro_tiktok/cmd/user/dal/db"
+	"micro_tiktok/cmd/user/pack"
 	"micro_tiktok/kitex_gen/user"
 	"micro_tiktok/pkg/constants"
 	"micro_tiktok/pkg/errno"
@@ -23,23 +24,28 @@ func NewCreateService(ctx context.Context) *CreateService {
 	}
 }
 
-func (c *CreateService) Create(req *user.CreateUserRequest) error {
+func (c *CreateService) Create(req *user.CreateUserRequest) (*user.User, error) {
 	_, err := db.QueryUser(c.ctx, req.Username)
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return errno.UserErr.WithMsg("user already exist")
+	if err == nil {
+		return nil, errno.UserErr.WithMsg("user is exist")
 	}
-	if err != nil {
-		return errno.ConvertErr(err)
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
 	}
 
 	h := sha256.New()
 	if _, err = io.WriteString(h, req.Password+constants.UserSalt); err != nil {
-		return err
+		return nil, err
 	}
 	password := fmt.Sprintf("%x", h.Sum(nil))
 
-	return db.Create(c.ctx, &db.User{
+	usr, err := db.Create(c.ctx, &db.User{
 		UserName: req.Username,
 		PassWord: password,
 	})
+	if err != nil {
+		return nil, err
+	}
+	return pack.User(usr), nil
 }

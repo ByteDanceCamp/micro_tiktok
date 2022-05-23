@@ -11,7 +11,7 @@ message User {
 }
 
 message Video {
-  int64 id = 1; // 视频 ID
+  optional int64 id = 1; // 视频 ID
   User author = 2; // 视频作者信息
   string play_url = 3; // 视频播放地址
   string cover_url = 4; // 视频封面地址
@@ -32,7 +32,7 @@ message feedRequest {
 
 message feedResponse {
   repeated Video video_list = 1; // 视频列表
-  optional int64 next_time = 2; // 本次返回的视频中，发布最早的时间，作为下次请求时的 latest_time
+  int64 next_time = 2; // 本次返回的视频中，发布最早的时间，作为下次请求时的 latest_time
   BaseResponse base_resp = 3; // 状态信息
 }
 

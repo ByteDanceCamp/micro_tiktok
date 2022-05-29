@@ -22,8 +22,8 @@ type UserParam struct {
 
 // CommonGETParam 大部分需要鉴权的 GET 请求的参数信息
 type CommonGETParam struct {
-	Uid   int64  `form:"user_id" binding:"required, number"`
-	Token string `form:"token" binding:"required, jwt"`
+	Uid   int64  `form:"user_id" binding:"required,number"`
+	Token string `form:"token" binding:"required,jwt"`
 }
 
 // ========= 返回相关 ============

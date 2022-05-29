@@ -11,8 +11,8 @@ func Router(r *gin.Engine) {
 
 	api := r.Group("/douyin")
 	user := api.Group("/user")
-	user.POST("/login", handlers.Login)
-	user.POST("/register", handlers.Register)
+	user.POST("/login/", handlers.Login)
+	user.POST("/register/", handlers.Register)
 	user.Use(authMiddleware.JWT.MiddlewareFunc())
 	{
 		user.GET("", handlers.UserInfo)

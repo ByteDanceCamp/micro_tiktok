@@ -38,7 +38,8 @@ message feedResponse {
 
 message publishRequest {
   string title = 1; // 视频标题
-  string play
+  string play_url = 2; // 视频链接
+  string cover_url = 3; // 封面链接
 }
 
 message publishResponse {

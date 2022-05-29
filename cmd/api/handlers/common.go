@@ -17,7 +17,7 @@ import (
 // UserParam 登录/注册时需要获取的参数信息
 type UserParam struct {
 	UserName string `form:"username" binding:"required,min=2,max=32,alphanumunicode"`
-	PassWord string `form:"password" binding:"required,min=6,max=32,alphanumunicode"`
+	PassWord string `form:"password" binding:"required,min=5,max=32,alphanumunicode"`
 }
 
 // CommonGETParam 大部分需要鉴权的 GET 请求的参数信息

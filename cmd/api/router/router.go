@@ -10,7 +10,7 @@ func Router(r *gin.Engine) {
 	authMiddleware := auth.NewMiddleware(handlers.AuthConfig)
 
 	api := r.Group("/douyin")
-	user := api.Group("/user")
+	user := api.Group("/user/")
 	user.POST("/login/", handlers.Login)
 	user.POST("/register/", handlers.Register)
 	user.Use(authMiddleware.JWT.MiddlewareFunc())

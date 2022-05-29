@@ -37,8 +37,8 @@ message feedResponse {
 }
 
 message publishRequest {
-  bytes data = 1; // 视频数据
-  string title = 2; // 视频标题
+  string title = 1; // 视频标题
+  string play
 }
 
 message publishResponse {

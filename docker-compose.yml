@@ -2,7 +2,7 @@ version: '3'
 
 services:
   mysql:
-    image: 'mysql:latest'
+    image: "mysql:latest"
     ports:
       - "13306:3306"
     environment:
@@ -11,7 +11,7 @@ services:
       - MYSQL_PASSWORD=4&o4csZZ^OMDiy1Q
       - MYSQL_RANDOM_ROOT_PASSWORD="yes"
   Etcd:
-    image: 'bitnami/etcd:latest'
+    image: "bitnami/etcd:latest"
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
     ports:
@@ -21,3 +21,8 @@ services:
     ports:
       - "6831:6831/udp"
       - "16686:16686"
+  Redis:
+    image: "redis:latest"
+    restart: always
+    ports:
+      - "16379:6379"

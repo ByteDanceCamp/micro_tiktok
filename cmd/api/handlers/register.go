@@ -8,7 +8,6 @@ import (
 	"micro_tiktok/kitex_gen/user"
 	"micro_tiktok/pkg/errno"
 	"net/http"
-	"strconv"
 )
 
 type registerResponse struct {
@@ -28,7 +27,6 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-
 	usr, err := rpc.CreateUser(context.Background(), &user.CreateUserRequest{
 		Username: registerVar.UserName,
 		Password: registerVar.PassWord,
@@ -42,7 +40,7 @@ func Register(c *gin.Context) {
 		return
 	}
 	author := auth.NewMiddleware(AuthConfig)
-	token, _, err := author.JWT.TokenGenerator(strconv.Itoa(int(usr.UserId)))
+	token, _, err := author.JWT.TokenGenerator(usr.UserId)
 	if err != nil {
 		e := errno.ConvertErr(err)
 		c.JSON(http.StatusOK, BaseResponse{

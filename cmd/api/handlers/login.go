@@ -8,7 +8,6 @@ import (
 	"micro_tiktok/kitex_gen/user"
 	"micro_tiktok/pkg/errno"
 	"net/http"
-	"strconv"
 )
 
 type loginResponse struct {
@@ -42,7 +41,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	author := auth.NewMiddleware(AuthConfig)
-	token, _, err := author.JWT.TokenGenerator(strconv.Itoa(int(uid)))
+	token, _, err := author.JWT.TokenGenerator(uid)
 	if err != nil {
 		e := errno.ConvertErr(err)
 		c.JSON(http.StatusOK, BaseResponse{

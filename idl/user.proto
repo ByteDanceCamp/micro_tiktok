@@ -5,8 +5,8 @@ option go_package = "user";
 message User {
   int64 id = 1; // 用户ID
   string name = 2; // 用户名
-  optional int64 follow_count = 3; // 关注总数
-  optional int64 follower_count = 4; // 粉丝总数
+  int64 follow_count = 3; // 关注总数
+  int64 follower_count = 4; // 粉丝总数
   bool is_follow = 5; // 是否关注，true：关注；false：未关注
 }
 

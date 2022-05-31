@@ -36,24 +36,13 @@ func initUserRpc() {
 	userClient = c
 }
 
-func CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.CreateUserResponse, error) {
-	resp, err := userClient.CreateUser(ctx, req)
+func MGetUser(ctx context.Context, req *user.MGetUserRequest) ([]*user.User, error) {
+	resp, err := userClient.MGetUser(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 	if resp.BaseResp.StatusCode != 0 {
 		return nil, errno.NewErrNo(resp.BaseResp.StatusCode, resp.BaseResp.StatusMsg)
 	}
-	return resp, nil
-}
-
-func CheckUser(ctx context.Context, req *user.CheckUserRequest) (uid int64, err error) {
-	resp, err := userClient.CheckUser(ctx, req)
-	if err != nil {
-		return 0, err
-	}
-	if resp.BaseResp.StatusCode != 0 {
-		return 0, errno.NewErrNo(resp.BaseResp.StatusCode, resp.BaseResp.StatusMsg)
-	}
-	return resp.UserId, nil
+	return resp.Users, nil
 }

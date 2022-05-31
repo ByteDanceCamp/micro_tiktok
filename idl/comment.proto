@@ -5,8 +5,8 @@ option go_package = "comment";
 message User {
   int64 id = 1; // 用户ID
   string name = 2; // 用户名
-  optional int64 follow_count = 3; // 关注总数
-  optional int64 follower_count = 4; // 粉丝总数
+  int64 follow_count = 3; // 关注总数
+  int64 follower_count = 4; // 粉丝总数
   bool is_follow = 5; // 是否关注，true：关注；false：未关注
 }
 
@@ -26,8 +26,8 @@ message commentRequest {
   int64 user_id = 1; // 用户 ID
   int64 video_id = 2; // 视频 ID
   int32 action_type = 3; // 操作类型，1：发布评论；2：删除评论
-  optional string comment_text = 4; // 评论内容，action_type 为 1 时使用
-  optional int64 comment_id = 5; // 要删除的评论 ID，cation_type 为 2 时使用
+  string comment_text = 4; // 评论内容，action_type 为 1 时使用
+  int64 comment_id = 5; // 要删除的评论 ID，cation_type 为 2 时使用
 }
 
 message commentResponse {

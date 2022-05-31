@@ -6,6 +6,7 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"micro_tiktok/cmd/api/rpc"
+	"micro_tiktok/kitex_gen/relation"
 	"micro_tiktok/kitex_gen/user"
 	"micro_tiktok/pkg/constants"
 	"net/http"
@@ -91,6 +92,26 @@ func UsersRPC2Gin(users []*user.User) []*User {
 	us := make([]*User, 0)
 	for _, v := range users {
 		if u2 := UserRPC2Gin(v); u2 != nil {
+			us = append(us, u2)
+		}
+	}
+	return us
+}
+
+func RelationUserRPC2Gin(user *relation.User) *User {
+	return &User{
+		ID:            user.Id,
+		Name:          user.Name,
+		FollowCount:   user.FollowCount,
+		FollowerCount: user.FollowerCount,
+		IsFollow:      user.IsFollow,
+	}
+}
+
+func RelationUsersRPC2Gin(users []*relation.User) []*User {
+	us := make([]*User, 0)
+	for _, v := range users {
+		if u2 := RelationUserRPC2Gin(v); u2 != nil {
 			us = append(us, u2)
 		}
 	}

@@ -11,26 +11,27 @@ import (
 	"net/http"
 )
 
-type userInfoResponse struct {
-	Code int64  `json:"status_code"`
-	Msg  string `json:"status_msg"`
-	User *User  `json:"user"`
+type relationActionParams struct {
+	ToUserId   int64 `form:"to_user_id" binding:"required,number"`
+	ActionType int32 `form:"action_type" binding:"required,number"`
 }
 
-func UserInfo(c *gin.Context) {
-	var userInfoVar CommonGETParam
-	if err := c.ShouldBind(&userInfoVar); err != nil {
-		e := errno.ConvertErr(err)
+func RelationAction(c *gin.Context) {
+	var actionVar relationActionParams
+	if err := c.ShouldBind(&actionVar); err != nil {
+		e := errno.ParamsErr.WithMsg(err.Error())
 		c.JSON(http.StatusOK, BaseResponse{
 			Code: e.ErrCode,
 			Msg:  e.ErrMsg,
 		})
+		return
 	}
 	claims := jwt.ExtractClaims(c)
 	uid := int64(claims[constants.IdentityKey].(float64))
-	user, err := rpc.UserInfo(context.Background(), &relation.InfoRequest{
-		UserId:       uid,
-		TargetUserId: userInfoVar.Uid,
+	err := rpc.RelationAction(context.Background(), &relation.ActionRequest{
+		UserId:     uid,
+		ToUserId:   actionVar.ToUserId,
+		ActionType: actionVar.ActionType,
 	})
 	if err != nil {
 		e := errno.ConvertErr(err)
@@ -40,12 +41,9 @@ func UserInfo(c *gin.Context) {
 		})
 		return
 	}
-
 	e := errno.Success
-	c.JSON(http.StatusOK, userInfoResponse{
+	c.JSON(http.StatusOK, BaseResponse{
 		Code: e.ErrCode,
 		Msg:  e.ErrMsg,
-		User: RelationUserRPC2Gin(user),
 	})
-
 }

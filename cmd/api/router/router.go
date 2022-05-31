@@ -17,4 +17,11 @@ func Router(r *gin.Engine) {
 	{
 		user.GET("", handlers.UserInfo)
 	}
+	relation := api.Group("/relation/")
+	relation.Use(authMiddleware.JWT.MiddlewareFunc())
+	{
+		relation.POST("/action/", handlers.RelationAction)
+		relation.GET("/follow/list/", handlers.FollowList)
+		relation.GET("/follower/list/", handlers.FollowerList)
+	}
 }

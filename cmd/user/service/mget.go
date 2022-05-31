@@ -20,14 +20,14 @@ func NewMGet(ctx context.Context) *MGetService {
 
 func (m *MGetService) MGet(req *user.MGetUserRequest) ([]*user.User, error) {
 	if len(req.UserIds) == 0 {
-		return nil, errno.UserErr.WithMsg("params is invalid.")
+		return make([]*user.User, 0), nil
 	}
 	users, err := db.MGet(m.ctx, req.UserIds)
 	if err != nil {
 		return nil, err
 	}
 	if len(users) == 0 {
-		return nil, errno.UserErr.WithMsg("user don't exist")
+		return nil, errno.UserErr.WithMsg("user isn't exist")
 	}
 	return pack.Users(users), nil
 }

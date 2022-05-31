@@ -11,26 +11,28 @@ import (
 	"net/http"
 )
 
-type userInfoResponse struct {
-	Code int64  `json:"status_code"`
-	Msg  string `json:"status_msg"`
-	User *User  `json:"user"`
+type followerListResp struct {
+	Code     int64   `json:"status_code"`
+	Msg      string  `json:"status_msg"`
+	UserList []*User `json:"user_list"`
 }
 
-func UserInfo(c *gin.Context) {
-	var userInfoVar CommonGETParam
-	if err := c.ShouldBind(&userInfoVar); err != nil {
-		e := errno.ConvertErr(err)
+func FollowerList(c *gin.Context) {
+	var followerListVar CommonGETParam
+	if err := c.ShouldBind(&followerListVar); err != nil {
+		e := errno.ParamsErr.WithMsg(err.Error())
 		c.JSON(http.StatusOK, BaseResponse{
 			Code: e.ErrCode,
 			Msg:  e.ErrMsg,
 		})
+		return
 	}
 	claims := jwt.ExtractClaims(c)
 	uid := int64(claims[constants.IdentityKey].(float64))
-	user, err := rpc.UserInfo(context.Background(), &relation.InfoRequest{
+	followerList, err := rpc.RelationList(context.Background(), &relation.ListRequest{
 		UserId:       uid,
-		TargetUserId: userInfoVar.Uid,
+		TargetUserId: followerListVar.Uid,
+		ActionType:   2,
 	})
 	if err != nil {
 		e := errno.ConvertErr(err)
@@ -40,12 +42,10 @@ func UserInfo(c *gin.Context) {
 		})
 		return
 	}
-
 	e := errno.Success
-	c.JSON(http.StatusOK, userInfoResponse{
-		Code: e.ErrCode,
-		Msg:  e.ErrMsg,
-		User: RelationUserRPC2Gin(user),
+	c.JSON(http.StatusOK, followListResp{
+		Code:     e.ErrCode,
+		Msg:      e.ErrMsg,
+		UserList: RelationUsersRPC2Gin(followerList),
 	})
-
 }

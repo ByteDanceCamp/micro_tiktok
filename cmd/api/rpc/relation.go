@@ -56,14 +56,3 @@ func RelationList(ctx context.Context, req *relation.ListRequest) ([]*relation.U
 	}
 	return resp.UserList, nil
 }
-
-func UserInfo(ctx context.Context, req *relation.InfoRequest) (*relation.User, error) {
-	resp, err := relationClient.Info(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	if resp.BaseResp.StatusCode != 0 {
-		return nil, errno.NewErrNo(resp.BaseResp.StatusCode, resp.BaseResp.StatusMsg)
-	}
-	return resp.User, nil
-}

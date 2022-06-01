@@ -5,7 +5,7 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"micro_tiktok/cmd/api/rpc"
-	"micro_tiktok/kitex_gen/relation"
+	user "micro_tiktok/kitex_gen/user"
 	"micro_tiktok/pkg/constants"
 	"micro_tiktok/pkg/errno"
 	"net/http"
@@ -28,9 +28,9 @@ func UserInfo(c *gin.Context) {
 	}
 	claims := jwt.ExtractClaims(c)
 	uid := int64(claims[constants.IdentityKey].(float64))
-	user, err := rpc.UserInfo(context.Background(), &relation.InfoRequest{
-		UserId:       uid,
-		TargetUserId: userInfoVar.Uid,
+	users, err := rpc.MGetUsers(context.Background(), &user.MGetUserRequest{
+		UserId:        uid,
+		TargetUserIds: []int64{userInfoVar.Uid},
 	})
 	if err != nil {
 		e := errno.ConvertErr(err)
@@ -40,12 +40,19 @@ func UserInfo(c *gin.Context) {
 		})
 		return
 	}
+	if len(users) == 0 {
+		e := errno.UserErr.WithMsg("user isn't exist")
+		c.JSON(http.StatusOK, BaseResponse{
+			Code: e.ErrCode,
+			Msg:  e.ErrMsg,
+		})
+	}
 
 	e := errno.Success
 	c.JSON(http.StatusOK, userInfoResponse{
 		Code: e.ErrCode,
 		Msg:  e.ErrMsg,
-		User: RelationUserRPC2Gin(user),
+		User: UserRPC2Gin(users[0]),
 	})
 
 }

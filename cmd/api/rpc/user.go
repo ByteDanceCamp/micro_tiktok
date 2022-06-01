@@ -57,3 +57,14 @@ func CheckUser(ctx context.Context, req *user.CheckUserRequest) (uid int64, err 
 	}
 	return resp.UserId, nil
 }
+
+func MGetUsers(ctx context.Context, req *user.MGetUserRequest) ([]*user.User, error) {
+	resp, err := userClient.MGetUser(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.BaseResp.StatusCode != 0 {
+		return nil, errno.NewErrNo(resp.BaseResp.StatusCode, resp.BaseResp.StatusMsg)
+	}
+	return resp.Users, nil
+}

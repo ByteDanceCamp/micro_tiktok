@@ -8,6 +8,7 @@ import (
 	etcd "github.com/kitex-contrib/registry-etcd"
 	trace "github.com/kitex-contrib/tracer-opentracing"
 	"micro_tiktok/cmd/user/dal"
+	"micro_tiktok/cmd/user/rpc"
 	user "micro_tiktok/kitex_gen/user/userservice"
 	"micro_tiktok/pkg/constants"
 	tracer2 "micro_tiktok/pkg/tracer"
@@ -17,6 +18,7 @@ import (
 func Init() {
 	tracer2.InitJaeger(constants.UserServiceName)
 	dal.Init()
+	rpc.InitRPC()
 }
 
 func main() {

@@ -23,7 +23,7 @@ func NewActionService(ctx context.Context) *ActionService {
 func (a *ActionService) Action(req *relation.ActionRequest) error {
 	var err error
 	// 验证目标用户是否存在
-	_, err = rpc.MGetUser(a.ctx, &user.MGetUserRequest{UserIds: []int64{req.ToUserId}})
+	_, err = rpc.MGetUser(a.ctx, &user.MGetUserRequest{TargetUserIds: []int64{req.ToUserId}})
 	if err != nil {
 		return err
 	}

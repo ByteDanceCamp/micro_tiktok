@@ -10,6 +10,12 @@ message User {
   bool is_follow = 5; // 是否关注，true：关注；false：未关注
 }
 
+message CountInfo {
+  int64 follow_count = 1; // 关注总数
+  int64 follower_count = 2; // 粉丝总数
+  bool is_follow = 3; // 是否被当前用户关注
+}
+
 message BaseResponse {
   int64 status_code = 1; // 状态码
   string status_msg = 2; // 状态信息
@@ -42,7 +48,7 @@ message InfoRequest {
 }
 
 message InfoResponse {
-  User user = 1; // 用户信息
+  CountInfo count_info = 1; // 结果信息
   BaseResponse base_resp = 2; // 状态信息
 }
 

@@ -23,9 +23,8 @@ func NewListService(ctx context.Context) *ListService {
 }
 
 func (l *ListService) RelationList(req *relation.ListRequest) (res []*relation.User, err error) {
-	uid, toUid := strconv.Itoa(int(req.UserId)), strconv.Itoa(int(req.TargetUserId))
+	toUid := strconv.Itoa(int(req.TargetUserId))
 	var targetKey string
-	followKey := constants.RelationFollowPre + uid
 	switch req.ActionType {
 	case 1:
 		targetKey = constants.RelationFollowPre + toUid
@@ -45,22 +44,12 @@ func (l *ListService) RelationList(req *relation.ListRequest) (res []*relation.U
 	if err != nil {
 		return nil, err
 	}
-	urs, err := rpc.MGetUser(l.ctx, &user.MGetUserRequest{UserIds: listIntSlice})
-	res = pack.Users(urs)
+	users, err := rpc.MGetUser(l.ctx, &user.MGetUserRequest{
+		TargetUserIds: listIntSlice,
+		UserId:        req.UserId,
+	})
 	if err != nil {
 		return nil, err
 	}
-	// 处理每个用户的关注、粉丝数及是否被当前用户关注
-	for i, v := range res {
-		res[i].FollowCount, err = redis.GetCount(l.ctx, constants.RelationFollowPre, strconv.Itoa(int(v.Id)))
-		if err != nil {
-			return nil, err
-		}
-		res[i].FollowerCount, err = redis.GetCount(l.ctx, constants.RelationFansPre, strconv.Itoa(int(v.Id)))
-		if err != nil {
-			return nil, err
-		}
-		res[i].IsFollow = redis.IsFollow(l.ctx, followKey, strconv.Itoa(int(v.Id)))
-	}
-	return res, nil
+	return pack.Users(users), nil
 }

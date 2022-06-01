@@ -11,8 +11,11 @@ func User(u *user.User) *relation.User {
 		return nil
 	}
 	return &relation.User{
-		Id:   u.Id,
-		Name: u.Name,
+		Id:            u.Id,
+		Name:          u.Name,
+		FollowCount:   u.FollowCount,
+		FollowerCount: u.FollowerCount,
+		IsFollow:      u.IsFollow,
 	}
 }
 

@@ -10,6 +10,10 @@ message User {
   bool is_follow = 5; // 是否关注，true：关注；false：未关注
 }
 
+message RelationInfo {
+
+}
+
 message BaseResponse {
   int64 status_code = 1;
   string status_msg = 2;
@@ -26,7 +30,8 @@ message CreateUserResponse {
 }
 
 message MGetUserRequest {
-  repeated int64 user_ids = 1; // 用户 ID 的数组
+  repeated int64 target_user_ids = 1; // 待查询用户 ID 的数组
+  int64 user_id = 2; // 当前用户 ID
 }
 
 message MGetUserResponse {

@@ -38,10 +38,9 @@ func (s *RelationServiceImpl) List(ctx context.Context, req *relation.ListReques
 // Info implements the RelationServiceImpl interface.
 func (s *RelationServiceImpl) Info(ctx context.Context, req *relation.InfoRequest) (resp *relation.InfoResponse, err error) {
 	resp = new(relation.InfoResponse)
-	resp.User, err = service.NewInfoService(ctx).Info(req)
+	resp.CountInfo, err = service.NewCountService(ctx).CountInfo(req)
 	if err != nil {
 		resp.BaseResp = pack.BuildBaseResp(err)
-		return resp, nil
 	}
 	resp.BaseResp = pack.BuildBaseResp(errno.Success)
 	return resp, nil

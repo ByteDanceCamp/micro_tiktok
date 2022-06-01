@@ -64,8 +64,11 @@ func GetCount(ctx context.Context, findType, uid string) (count int64, err error
 }
 
 // IsFollow 判断目标用户是否在当前用户关注列表中
-func IsFollow(ctx context.Context, key, targetUid string) bool {
-	res := RDB.ZScore(ctx, key, targetUid).Val()
+func IsFollow(ctx context.Context, keyPre, uid, targetUid string) bool {
+	if uid == targetUid {
+		return false
+	}
+	res := RDB.ZScore(ctx, keyPre+uid, targetUid).Val()
 	if res != 0 {
 		return true
 	}

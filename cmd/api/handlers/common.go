@@ -83,8 +83,11 @@ var AuthConfig = jwt.GinJWTMiddleware{
 
 func UserRPC2Gin(user *user.User) *User {
 	return &User{
-		ID:   user.Id,
-		Name: user.Name,
+		ID:            user.Id,
+		Name:          user.Name,
+		FollowCount:   user.FollowCount,
+		FollowerCount: user.FollowerCount,
+		IsFollow:      user.IsFollow,
 	}
 }
 

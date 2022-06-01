@@ -45,7 +45,17 @@ message favoriteListResponse {
   BaseResponse base_resp = 2; // 状态信息
 }
 
+message VideoFavoriteCountRequest {
+  int64 video_id = 1; // 视频 ID
+}
+
+message VideoFavoriteCountResponse {
+  int64 count = 1;
+  BaseResponse base_resp = 2;
+}
+
 service FavoriteVideoServer {
   rpc Favorite (favoriteRequest) returns (favoriteResponse) {}
   rpc FavoriteList (favoriteListRequest) returns (favoriteListResponse) {}
+  rpc Count (VideoFavoriteCountRequest) returns (VideoFavoriteCountResponse) {}
 }

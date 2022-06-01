@@ -43,7 +43,17 @@ message commentListResponse {
   BaseResponse base_rep = 2; // 状态信息
 }
 
+message commentCountRequest {
+  int64 video_id = 1;
+}
+
+message commentCountResponse {
+  int64 count = 1;
+  BaseResponse base_resp = 2;
+}
+
 service CommentVideoServer {
   rpc Comment (commentRequest) returns (commentResponse) {}
   rpc List (commentListRequest) returns (commentListResponse) {}
+  rpc CountRes (commentCountRequest) returns (commentCountResponse) {}
 }

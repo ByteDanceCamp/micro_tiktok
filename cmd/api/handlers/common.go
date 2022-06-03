@@ -6,11 +6,13 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"micro_tiktok/cmd/api/rpc"
+	"micro_tiktok/kitex_gen/favorite"
 	"micro_tiktok/kitex_gen/relation"
 	"micro_tiktok/kitex_gen/user"
 	"micro_tiktok/pkg/constants"
 	"net/http"
 	"time"
+	"unsafe"
 )
 
 // ========= 请求参数相关 ============
@@ -42,6 +44,18 @@ type User struct {
 type BaseResponse struct {
 	Code int64  `json:"status_code"`
 	Msg  string `json:"status_msg"`
+}
+
+// Video Gin 返回的视频信息
+type Video struct {
+	Id            int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                            // 视频 ID
+	Author        *User  `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`                                     // 视频作者信息
+	PlayUrl       string `protobuf:"bytes,3,opt,name=play_url,json=playUrl,proto3" json:"play_url,omitempty"`                    // 视频播放地址
+	CoverUrl      string `protobuf:"bytes,4,opt,name=cover_url,json=coverUrl,proto3" json:"cover_url,omitempty"`                 // 视频封面地址
+	FavoriteCount int64  `protobuf:"varint,5,opt,name=favorite_count,json=favoriteCount,proto3" json:"favorite_count,omitempty"` // 视频点赞总数
+	CommentCount  int64  `protobuf:"varint,6,opt,name=comment_count,json=commentCount,proto3" json:"comment_count,omitempty"`    // 视频评论总数
+	IsFavorite    bool   `protobuf:"varint,7,opt,name=is_favorite,json=isFavorite,proto3" json:"is_favorite,omitempty"`          // 是否点赞，true：已点赞；false：未点赞
+	Title         string `protobuf:"bytes,8,opt,name=title,proto3" json:"title,omitempty"`                                       // 视频标题
 }
 
 // ========= 其他公共部分 ============
@@ -101,6 +115,18 @@ func UsersRPC2Gin(users []*user.User) []*User {
 	return us
 }
 
+func FavoriteVideoRPC2Gin(fv *favorite.Video) *Video {
+	return &Video{
+		Id:            fv.Id,
+		Author:        (*User)(unsafe.Pointer(fv.Author)),
+		PlayUrl:       fv.PlayUrl,
+		CoverUrl:      fv.CoverUrl,
+		FavoriteCount: fv.FavoriteCount,
+		CommentCount:  fv.CommentCount,
+		IsFavorite:    fv.IsFavorite,
+		Title:         fv.Title,
+	}
+}
 func RelationUserRPC2Gin(user *relation.User) *User {
 	return &User{
 		ID:            user.Id,
@@ -110,7 +136,15 @@ func RelationUserRPC2Gin(user *relation.User) *User {
 		IsFollow:      user.IsFollow,
 	}
 }
-
+func FavoriteVideosRPC2Gin(fvs []*favorite.Video) []*Video {
+	vs := make([]*Video, 0)
+	for _, v := range fvs {
+		if v2 := FavoriteVideoRPC2Gin(v); v2 != nil {
+			vs = append(vs, v2)
+		}
+	}
+	return vs
+}
 func RelationUsersRPC2Gin(users []*relation.User) []*User {
 	us := make([]*User, 0)
 	for _, v := range users {

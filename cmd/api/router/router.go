@@ -24,4 +24,12 @@ func Router(r *gin.Engine) {
 		relation.GET("/follow/list/", handlers.FollowList)
 		relation.GET("/follower/list/", handlers.FollowerList)
 	}
+
+	favorite := api.Group("/favorite/")
+	favorite.Use(authMiddleware.JWT.MiddlewareFunc())
+	{
+		favorite.POST("/action/", handlers.FavoriteAction)
+		favorite.GET("/list/", handlers.FavoriteVideoList)
+	}
+
 }

@@ -3,6 +3,7 @@ package pack
 import (
 	"micro_tiktok/kitex_gen/favorite"
 	"micro_tiktok/kitex_gen/video"
+	"unsafe"
 )
 
 //	Video video.Video to favorite.Video
@@ -13,7 +14,7 @@ func Video(v *video.Video) *favorite.Video {
 	return &favorite.Video{
 		Id: v.Id,
 		//	这里的报错不知道咋搞的。。
-		Author:        v.Author,
+		Author:        (*favorite.User)(unsafe.Pointer(v.Author)),
 		PlayUrl:       v.PlayUrl,
 		CoverUrl:      v.CoverUrl,
 		FavoriteCount: v.FavoriteCount,

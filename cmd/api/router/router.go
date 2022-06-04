@@ -24,4 +24,10 @@ func Router(r *gin.Engine) {
 		relation.GET("/follow/list/", handlers.FollowList)
 		relation.GET("/follower/list/", handlers.FollowerList)
 	}
+	comment := api.Group("/comment/")
+	comment.Use(authMiddleware.JWT.MiddlewareFunc())
+	{
+		comment.POST("/action/", handlers.CommentAction)
+		comment.GET("/list/", handlers.CommentList)
+	}
 }

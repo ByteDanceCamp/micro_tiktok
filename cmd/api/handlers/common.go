@@ -6,6 +6,7 @@ import (
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"micro_tiktok/cmd/api/rpc"
+	"micro_tiktok/kitex_gen/comment"
 	"micro_tiktok/kitex_gen/relation"
 	"micro_tiktok/kitex_gen/user"
 	"micro_tiktok/pkg/constants"
@@ -36,6 +37,13 @@ type User struct {
 	FollowCount   int64  `json:"follow_count"`
 	FollowerCount int64  `json:"follower_count"`
 	IsFollow      bool   `json:"is_follow"`
+}
+
+type Comment struct {
+	ID         int64 `json:"id"`
+	User       User
+	Content    string
+	CreateDate string
 }
 
 // BaseResponse Gin 返回非预期（错误）结果时使用
@@ -101,6 +109,16 @@ func UsersRPC2Gin(users []*user.User) []*User {
 	return us
 }
 
+func CommentUserRPC2Gin(user *comment.User) *User {
+	return &User{
+		ID:            user.Id,
+		Name:          user.Name,
+		FollowCount:   user.FollowCount,
+		FollowerCount: user.FollowerCount,
+		IsFollow:      user.IsFollow,
+	}
+}
+
 func RelationUserRPC2Gin(user *relation.User) *User {
 	return &User{
 		ID:            user.Id,
@@ -119,4 +137,21 @@ func RelationUsersRPC2Gin(users []*relation.User) []*User {
 		}
 	}
 	return us
+}
+
+func CommentRPC2Gin(c *comment.Comment) *Comment {
+	return &Comment{
+		ID:         c.Id,
+		User:       *CommentUserRPC2Gin(c.User),
+		Content:    c.Content,
+		CreateDate: c.CreateDate,
+	}
+}
+
+func CommentsRPC2Gin(cs []*comment.Comment) []*Comment {
+	counts := make([]*Comment, 0)
+	for _, v := range cs {
+		counts = append(counts, CommentRPC2Gin(v))
+	}
+	return counts
 }

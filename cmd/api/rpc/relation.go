@@ -51,7 +51,7 @@ func RelationList(ctx context.Context, req *relation.ListRequest) ([]*relation.U
 	if err != nil {
 		return nil, err
 	}
-	if resp.BaseResp.StatusCode != 0 {
+	if resp.BaseResp.StatusCode != errno.SuccessCode {
 		return nil, errno.NewErrNo(resp.BaseResp.StatusCode, resp.BaseResp.StatusMsg)
 	}
 	return resp.UserList, nil

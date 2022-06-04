@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"github.com/gin-gonic/gin"
 	"micro_tiktok/cmd/api/middleware/auth"
 	"micro_tiktok/cmd/api/rpc"
@@ -28,7 +27,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	uid, err := rpc.CheckUser(context.Background(), &user.CheckUserRequest{
+	uid, err := rpc.CheckUser(c, &user.CheckUserRequest{
 		Username: loginVar.UserName,
 		Password: loginVar.PassWord,
 	})

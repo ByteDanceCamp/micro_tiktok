@@ -18,8 +18,8 @@ message Comment {
 }
 
 message BaseResponse {
-  int32 status_code = 1; // 状态码
-  int64 status_msg = 2; // 状态信息
+  int64 status_code = 1; // 状态码
+  string status_msg = 2; // 状态信息
 }
 
 message commentRequest {
@@ -31,16 +31,18 @@ message commentRequest {
 }
 
 message commentResponse {
-  BaseResponse base_resp = 1;
+  repeated Comment comment_list = 1;
+  BaseResponse base_resp = 2;
 }
 
 message commentListRequest {
   int64 video_id = 1; // 视频 ID
+  int64 user_id = 2; // 当前用户 ID
 }
 
 message commentListResponse {
   repeated Comment comment_list = 1; // 评论列表
-  BaseResponse base_rep = 2; // 状态信息
+  BaseResponse base_resp = 2; // 状态信息
 }
 
 message commentCountRequest {
@@ -52,7 +54,7 @@ message commentCountResponse {
   BaseResponse base_resp = 2;
 }
 
-service CommentVideoServer {
+service CommentVideoService {
   rpc Comment (commentRequest) returns (commentResponse) {}
   rpc List (commentListRequest) returns (commentListResponse) {}
   rpc CountRes (commentCountRequest) returns (commentCountResponse) {}

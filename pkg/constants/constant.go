@@ -5,11 +5,14 @@ const (
 	APIServiceName      = "api_service"
 	UserServiceName     = "user_service"
 	RelationServiceName = "relation_service"
+	CommentServiceName  = "comment_service"
 
 	UserTableName          = TablePre + "user"
 	RelationCountTableName = TablePre + "relation_count"
 	FollowTableName        = TablePre + "follow"
 	FollowerTableName      = TablePre + "follower"
+	CommentTableName       = TablePre + "comment"
+	CommentCountTableName  = TablePre + "comment_count"
 
 	RelationFollowPre = "follow:"
 	RelationFansPre   = "fans:"

@@ -3,16 +3,18 @@ package handlers
 
 import (
 	"context"
-	jwt "github.com/appleboy/gin-jwt/v2"
-	"github.com/gin-gonic/gin"
 	"micro_tiktok/cmd/api/rpc"
 	"micro_tiktok/kitex_gen/favorite"
 	"micro_tiktok/kitex_gen/relation"
 	"micro_tiktok/kitex_gen/user"
+	"micro_tiktok/kitex_gen/video"
 	"micro_tiktok/pkg/constants"
 	"net/http"
 	"time"
 	"unsafe"
+
+	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/gin-gonic/gin"
 )
 
 // ========= 请求参数相关 ============
@@ -153,4 +155,32 @@ func RelationUsersRPC2Gin(users []*relation.User) []*User {
 		}
 	}
 	return us
+}
+func VideoRPC2Gin(vi *video.Video) *Video {
+	return &Video{
+		Id: vi.Id,
+		Author: User{
+			ID:            vi.Author.Id,
+			Name:          vi.Author.Name,
+			FollowCount:   vi.Author.FollowCount,
+			FollowerCount: vi.Author.FollowerCount,
+			IsFollow:      vi.Author.IsFollow,
+		},
+		PlayUrl:       vi.PlayUrl,
+		CoverUrl:      vi.CoverUrl,
+		FavoriteCount: vi.FavoriteCount,
+		CommentCount:  vi.CommentCount,
+		IsFavorite:    vi.IsFavorite,
+		Title:         vi.Title,
+	}
+}
+
+func VideosRPC2Gin(videos []*video.Video) []*Video {
+	vs := make([]*Video, 0)
+	for _, v := range videos {
+		if v2 := VideoRPC2Gin(v); v2 != nil {
+			vs = append(vs, v2)
+		}
+	}
+	return vs
 }

@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"errors"
+	"micro_tiktok/cmd/relation/dal/db"
 	"micro_tiktok/cmd/relation/dal/redis"
 	"micro_tiktok/cmd/relation/rpc"
 	"micro_tiktok/kitex_gen/relation"
 	"micro_tiktok/kitex_gen/user"
-	"strconv"
+	"micro_tiktok/pkg/errno"
 )
 
 type ActionService struct {
@@ -15,31 +15,39 @@ type ActionService struct {
 }
 
 func NewActionService(ctx context.Context) *ActionService {
-	return &ActionService{
-		ctx: ctx,
-	}
+	return &ActionService{ctx: ctx}
 }
 
-func (a *ActionService) Action(req *relation.ActionRequest) error {
-	var err error
+func (a *ActionService) Action(req *relation.ActionRequest) (err error) {
 	// 验证目标用户是否存在
-	_, err = rpc.MGetUser(a.ctx, &user.MGetUserRequest{TargetUserIds: []int64{req.ToUserId}})
+	isExist, _ := rpc.IsExist(a.ctx, &user.IsExistByIdRequest{UserId: req.ToUserId})
+	if !isExist {
+		return errno.UserErr.WithMsg("user is not exist")
+	}
+	// 更改数据库
+	switch req.ActionType {
+	case 1:
+		// 关注操作
+		err = db.FollowAction(a.ctx, req.UserId, req.ToUserId)
+		if err != nil {
+			return err
+		}
+	case 2:
+		// 取关操作
+		err = db.UnFollowAction(a.ctx, req.UserId, req.ToUserId)
+		if err != nil {
+			return err
+		}
+	default:
+		return errno.ParamsErr.WithMsg("action type is invalid")
+	}
+	// 删除 redis 缓存
+	err = redis.Action(a.ctx, &redis.ActionParams{
+		Uid:   req.UserId,
+		ToUid: req.ToUserId,
+	})
 	if err != nil {
 		return err
 	}
-	switch req.ActionType {
-	case 1:
-		err = redis.Follow(a.ctx, &redis.ActionParams{
-			Uid:   strconv.Itoa(int(req.UserId)),
-			ToUid: strconv.Itoa(int(req.ToUserId)),
-		})
-	case 2:
-		err = redis.UnFollow(a.ctx, &redis.ActionParams{
-			Uid:   strconv.Itoa(int(req.UserId)),
-			ToUid: strconv.Itoa(int(req.ToUserId)),
-		})
-	default:
-		err = errors.New("invalid action params")
-	}
-	return err
+	return nil
 }

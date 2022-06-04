@@ -14,6 +14,7 @@ type Client interface {
 	CreateUser(ctx context.Context, Req *user.CreateUserRequest, callOptions ...callopt.Option) (r *user.CreateUserResponse, err error)
 	MGetUser(ctx context.Context, Req *user.MGetUserRequest, callOptions ...callopt.Option) (r *user.MGetUserResponse, err error)
 	CheckUser(ctx context.Context, Req *user.CheckUserRequest, callOptions ...callopt.Option) (r *user.CheckUserResponse, err error)
+	IsExist(ctx context.Context, Req *user.IsExistByIdRequest, callOptions ...callopt.Option) (r *user.IsExistByIdResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +59,9 @@ func (p *kUserServiceClient) MGetUser(ctx context.Context, Req *user.MGetUserReq
 func (p *kUserServiceClient) CheckUser(ctx context.Context, Req *user.CheckUserRequest, callOptions ...callopt.Option) (r *user.CheckUserResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.CheckUser(ctx, Req)
+}
+
+func (p *kUserServiceClient) IsExist(ctx context.Context, Req *user.IsExistByIdRequest, callOptions ...callopt.Option) (r *user.IsExistByIdResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.IsExist(ctx, Req)
 }

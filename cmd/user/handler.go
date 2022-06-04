@@ -56,3 +56,15 @@ func (s *UserServiceImpl) CheckUser(ctx context.Context, req *user.CheckUserRequ
 	resp.UserId = uid
 	return resp, nil
 }
+
+// IsExist implements the UserServiceImpl interface.
+func (s *UserServiceImpl) IsExist(ctx context.Context, req *user.IsExistByIdRequest) (resp *user.IsExistByIdResponse, err error) {
+	resp = new(user.IsExistByIdResponse)
+	resp.IsExist, err = service.NewIsExistService(ctx).IsExist(req)
+	if err != nil {
+		resp.BaseResp = pack.BuildBaseResp(errno.UserErr.WithMsg(err.Error()))
+		return resp, nil
+	}
+	resp.BaseResp = pack.BuildBaseResp(errno.Success)
+	return resp, nil
+}

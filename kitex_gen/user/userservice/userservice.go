@@ -25,6 +25,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"CreateUser": kitex.NewMethodInfo(createUserHandler, newCreateUserArgs, newCreateUserResult, false),
 		"MGetUser":   kitex.NewMethodInfo(mGetUserHandler, newMGetUserArgs, newMGetUserResult, false),
 		"CheckUser":  kitex.NewMethodInfo(checkUserHandler, newCheckUserArgs, newCheckUserResult, false),
+		"IsExist":    kitex.NewMethodInfo(isExistHandler, newIsExistArgs, newIsExistResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "user.core",
@@ -349,6 +350,109 @@ func (p *CheckUserResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
+func isExistHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(user.IsExistByIdRequest)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(user.UserService).IsExist(ctx, req)
+		if err != nil {
+			return err
+		}
+		if err := st.SendMsg(resp); err != nil {
+			return err
+		}
+	case *IsExistArgs:
+		success, err := handler.(user.UserService).IsExist(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*IsExistResult)
+		realResult.Success = success
+	}
+	return nil
+}
+func newIsExistArgs() interface{} {
+	return &IsExistArgs{}
+}
+
+func newIsExistResult() interface{} {
+	return &IsExistResult{}
+}
+
+type IsExistArgs struct {
+	Req *user.IsExistByIdRequest
+}
+
+func (p *IsExistArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, fmt.Errorf("No req in IsExistArgs")
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *IsExistArgs) Unmarshal(in []byte) error {
+	msg := new(user.IsExistByIdRequest)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var IsExistArgs_Req_DEFAULT *user.IsExistByIdRequest
+
+func (p *IsExistArgs) GetReq() *user.IsExistByIdRequest {
+	if !p.IsSetReq() {
+		return IsExistArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *IsExistArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+type IsExistResult struct {
+	Success *user.IsExistByIdResponse
+}
+
+var IsExistResult_Success_DEFAULT *user.IsExistByIdResponse
+
+func (p *IsExistResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, fmt.Errorf("No req in IsExistResult")
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *IsExistResult) Unmarshal(in []byte) error {
+	msg := new(user.IsExistByIdResponse)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *IsExistResult) GetSuccess() *user.IsExistByIdResponse {
+	if !p.IsSetSuccess() {
+		return IsExistResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *IsExistResult) SetSuccess(x interface{}) {
+	p.Success = x.(*user.IsExistByIdResponse)
+}
+
+func (p *IsExistResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -384,6 +488,16 @@ func (p *kClient) CheckUser(ctx context.Context, Req *user.CheckUserRequest) (r 
 	_args.Req = Req
 	var _result CheckUserResult
 	if err = p.c.Call(ctx, "CheckUser", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) IsExist(ctx context.Context, Req *user.IsExistByIdRequest) (r *user.IsExistByIdResponse, err error) {
+	var _args IsExistArgs
+	_args.Req = Req
+	var _result IsExistResult
+	if err = p.c.Call(ctx, "IsExist", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

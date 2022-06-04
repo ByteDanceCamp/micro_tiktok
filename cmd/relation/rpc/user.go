@@ -46,3 +46,14 @@ func MGetUser(ctx context.Context, req *user.MGetUserRequest) ([]*user.User, err
 	}
 	return resp.Users, nil
 }
+
+func IsExist(ctx context.Context, req *user.IsExistByIdRequest) (bool, error) {
+	resp, err := userClient.IsExist(ctx, req)
+	if err != nil {
+		return resp.IsExist, err
+	}
+	if resp.BaseResp.StatusCode != 0 {
+		return resp.IsExist, errno.NewErrNo(resp.BaseResp.StatusCode, resp.BaseResp.StatusMsg)
+	}
+	return resp.IsExist, nil
+}

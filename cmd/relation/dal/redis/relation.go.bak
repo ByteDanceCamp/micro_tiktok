@@ -4,12 +4,13 @@ import (
 	"context"
 	"github.com/go-redis/redis/v8"
 	"micro_tiktok/pkg/constants"
+	"strconv"
 	"time"
 )
 
 type ActionParams struct {
-	Uid   string
-	ToUid string
+	Uid   int64
+	ToUid int64
 }
 
 func Follow(ctx context.Context, params *ActionParams) error {
@@ -18,14 +19,14 @@ func Follow(ctx context.Context, params *ActionParams) error {
 
 	// 自己的关注表添加数据
 	followTime := time.Now().Unix()
-	followKey := constants.RelationFollowPre + params.Uid
+	followKey := constants.RelationFollowPre + strconv.Itoa(int(params.Uid))
 	pipe.ZAddNX(ctx, followKey, &redis.Z{
 		Score:  float64(followTime),
 		Member: params.ToUid,
 	})
 
 	// 目标的粉丝表添加数据
-	fansKey := constants.RelationFansPre + params.ToUid
+	fansKey := constants.RelationFansPre + strconv.Itoa(int(params.ToUid))
 	pipe.ZAddNX(ctx, fansKey, &redis.Z{
 		Score:  float64(followTime),
 		Member: params.Uid,
@@ -42,11 +43,11 @@ func UnFollow(ctx context.Context, params *ActionParams) error {
 	pipe := RDB.WithContext(ctx).TxPipeline()
 
 	// 自己的关注列表删除数据
-	followKey := constants.RelationFollowPre + params.Uid
+	followKey := constants.RelationFollowPre + strconv.Itoa(int(params.Uid))
 	pipe.ZRem(ctx, followKey, params.ToUid)
 
 	// 目标粉丝列表中删除数据
-	fansKey := constants.RelationFansPre + params.ToUid
+	fansKey := constants.RelationFansPre + strconv.Itoa(int(params.ToUid))
 	pipe.ZRem(ctx, fansKey, params.Uid)
 
 	_, err := pipe.Exec(ctx)

@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"gorm.io/gorm"
 	"micro_tiktok/pkg/constants"
 )
@@ -44,4 +45,16 @@ func QueryUser(ctx context.Context, username string) (*User, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func IsExist(ctx context.Context, id int64) (bool, error) {
+	res := &User{}
+	err := DB.WithContext(ctx).Where("id = ?", id).Take(&res).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, nil
+	}
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, err
+	}
+	return true, nil
 }

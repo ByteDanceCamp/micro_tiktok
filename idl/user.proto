@@ -10,10 +10,6 @@ message User {
   bool is_follow = 5; // 是否关注，true：关注；false：未关注
 }
 
-message RelationInfo {
-
-}
-
 message BaseResponse {
   int64 status_code = 1;
   string status_msg = 2;
@@ -49,8 +45,18 @@ message CheckUserResponse{
   BaseResponse base_resp = 2;
 }
 
+message IsExistByIdRequest {
+  int64 user_id = 1;
+}
+
+message IsExistByIdResponse {
+  bool is_exist = 1;
+  BaseResponse base_resp = 2;
+}
+
 service UserService {
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
   rpc MGetUser (MGetUserRequest) returns (MGetUserResponse) {}
   rpc CheckUser (CheckUserRequest) returns (CheckUserResponse) {}
+  rpc IsExist (IsExistByIdRequest) returns (IsExistByIdResponse) {}
 }

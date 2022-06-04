@@ -4,4 +4,5 @@ package rpc
 func InitRPC() {
 	initUserRpc()
 	initRelationRPC()
+	initFavoriteRPC()
 }

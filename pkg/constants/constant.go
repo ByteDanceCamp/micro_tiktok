@@ -4,9 +4,13 @@ const (
 	TablePre            = "ds_"
 	APIServiceName      = "api_service"
 	UserServiceName     = "user_service"
+	VideoServiceName    = "video_service"
+	CommentServiceName  = "comment_service"
+	FavoriteServiceName = "favorite_service"
 	RelationServiceName = "relation_service"
 
 	UserTableName          = TablePre + "user"
+	VideoTableName         = TablePre + "video"
 	RelationCountTableName = TablePre + "relation_count"
 	FollowTableName        = TablePre + "follow"
 	FollowerTableName      = TablePre + "follower"
@@ -14,6 +18,8 @@ const (
 	RelationFollowPre = "follow:"
 	RelationFansPre   = "fans:"
 	RelationCountPre  = "count:"
+	FavoriteLikePre   = "like:"
+	FavoriteVideoPre  = "video:"
 
 	UserSalt     = "ByteDanceCamp"
 	JWTSecretKey = "ByteDanceCamp3"

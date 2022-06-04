@@ -159,7 +159,7 @@ func RelationUsersRPC2Gin(users []*relation.User) []*User {
 func VideoRPC2Gin(vi *video.Video) *Video {
 	return &Video{
 		Id: vi.Id,
-		Author: User{
+		Author: &User{
 			ID:            vi.Author.Id,
 			Name:          vi.Author.Name,
 			FollowCount:   vi.Author.FollowCount,

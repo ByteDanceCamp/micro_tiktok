@@ -50,7 +50,7 @@ func Feed(c *gin.Context) {
 		return
 	}
 	for _, vi := range videos {
-		var tmp = []int64{}
+		var tmp []int64
 		tmp = append(tmp, vi.Author.Id)
 		rep, _ := rpc.MGetUsers(context.Background(), &user.MGetUserRequest{
 			UserId:        uid,

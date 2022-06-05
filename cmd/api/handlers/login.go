@@ -39,7 +39,7 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	author := auth.NewMiddleware(AuthConfig)
+	author := auth.NewMiddleware(auth.Config)
 	token, _, err := author.JWT.TokenGenerator(uid)
 	if err != nil {
 		e := errno.ConvertErr(err)

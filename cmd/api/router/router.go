@@ -7,7 +7,7 @@ import (
 )
 
 func Router(r *gin.Engine) {
-	authMiddleware := auth.NewMiddleware(handlers.AuthConfig)
+	authMiddleware := auth.NewMiddleware(auth.Config)
 
 	api := r.Group("/douyin")
 	user := api.Group("/user/")
@@ -29,5 +29,11 @@ func Router(r *gin.Engine) {
 	{
 		comment.POST("/action/", handlers.CommentAction)
 		comment.GET("/list/", handlers.CommentList)
+	}
+	video := api.Group("/publish")
+	//video.POST("/action/", handlers.VideoPublish)
+	video.Use(auth.FormMiddleWare())
+	{
+		video.POST("/action/", handlers.VideoPublish)
 	}
 }

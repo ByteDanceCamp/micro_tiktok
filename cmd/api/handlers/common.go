@@ -2,16 +2,9 @@
 package handlers
 
 import (
-	"context"
-	jwt "github.com/appleboy/gin-jwt/v2"
-	"github.com/gin-gonic/gin"
-	"micro_tiktok/cmd/api/rpc"
 	"micro_tiktok/kitex_gen/comment"
 	"micro_tiktok/kitex_gen/relation"
 	"micro_tiktok/kitex_gen/user"
-	"micro_tiktok/pkg/constants"
-	"net/http"
-	"time"
 )
 
 // ========= 请求参数相关 ============
@@ -53,41 +46,6 @@ type BaseResponse struct {
 }
 
 // ========= 其他公共部分 ============
-
-// AuthConfig 生成 JWT 中间件对象时需要的配置信息
-var AuthConfig = jwt.GinJWTMiddleware{
-	Key:        []byte(constants.JWTSecretKey),
-	Timeout:    time.Hour,
-	MaxRefresh: time.Hour,
-	Authenticator: func(c *gin.Context) (interface{}, error) {
-		var loginVar UserParam
-		if err := c.ShouldBind(&loginVar); err != nil {
-			return "", jwt.ErrMissingLoginValues
-		}
-
-		if len(loginVar.UserName) == 0 || len(loginVar.PassWord) == 0 {
-			return "", jwt.ErrMissingLoginValues
-		}
-
-		return rpc.CheckUser(context.Background(), &user.CheckUserRequest{Username: loginVar.UserName, Password: loginVar.PassWord})
-	},
-	Authorizator: nil,
-	PayloadFunc: func(data interface{}) jwt.MapClaims {
-		if v, ok := data.(int64); ok {
-			return jwt.MapClaims{
-				constants.IdentityKey: v,
-			}
-		}
-		return jwt.MapClaims{}
-	},
-	Unauthorized: func(c *gin.Context, code int, message string) {
-		c.JSON(http.StatusOK, gin.H{
-			"status_code": code,
-			"status_msg":  message,
-		})
-	},
-	TokenLookup: "query: token",
-}
 
 func UserRPC2Gin(user *user.User) *User {
 	return &User{

@@ -12,7 +12,7 @@ func TestListService_CommentList(t *testing.T) {
 	dal.Init()
 	rpc.Init()
 	res, err := NewListService(context.Background()).CommentList(&comment.CommentListRequest{
-		VideoId: 0,
+		VideoId: 1,
 		UserId:  0,
 	})
 	if err != nil {

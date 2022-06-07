@@ -1,9 +1,10 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"micro_tiktok/cmd/api/handlers"
 	"micro_tiktok/cmd/api/middleware/auth"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Router(r *gin.Engine) {
@@ -31,9 +32,20 @@ func Router(r *gin.Engine) {
 		comment.GET("/list/", handlers.CommentList)
 	}
 	video := api.Group("/publish")
-	//video.POST("/action/", handlers.VideoPublish)
-	video.Use(auth.FormMiddleWare())
+	//api.GET("/feed", handlers.Feed)
+	api.GET("/feed", auth.SelectMiddleWare(), handlers.Feed)
+	//api.GET("/feed", handlers.MockVideo)
+	video.POST("/action/", auth.FormMiddleWare(), handlers.VideoPublish)
+
+	video.Use(authMiddleware.JWT.MiddlewareFunc())
 	{
-		video.POST("/action/", handlers.VideoPublish)
+		video.GET("/list/", handlers.VList)
+	}
+
+	favorite := api.Group("/favorite/")
+	favorite.Use(authMiddleware.JWT.MiddlewareFunc())
+	{
+		favorite.POST("/action/", handlers.FavoriteAction)
+		favorite.GET("/list/", handlers.FavoriteVideoList)
 	}
 }

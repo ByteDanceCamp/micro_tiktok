@@ -56,7 +56,7 @@ func (l *ListService) RelationList(req *relation.ListRequest) (res []*relation.U
 	if e.ErrCode == errno.SuccessCode {
 		urs, err := rpc.MGetUser(l.ctx, &user.MGetUserRequest{
 			TargetUserIds: ids,
-			UserId:        0,
+			UserId:        req.UserId,
 		})
 		if err != nil {
 			return nil, err

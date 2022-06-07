@@ -181,8 +181,10 @@ func UnFollowAction(ctx context.Context, uid, toUid int64) (err error) {
 }
 
 func AddRecord(ctx context.Context, uid int64) (res *RelationCount, err error) {
-	data := &RelationCount{Uid: uid}
-	if err = DB.WithContext(ctx).Create(&data).Error; err != nil {
+	res = &RelationCount{
+		Uid: uid,
+	}
+	if err = DB.WithContext(ctx).Create(&res).Error; err != nil {
 		return nil, err
 	}
 	return res, nil

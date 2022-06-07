@@ -35,7 +35,7 @@ func initCommentRPC() {
 	commentClient = c
 }
 
-func CommentAction(ctx context.Context, req *comment.CommentRequest) ([]*comment.Comment, error) {
+func CommentAction(ctx context.Context, req *comment.CommentRequest) (*comment.Comment, error) {
 	resp, err := commentClient.Comment(ctx, req)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func CommentAction(ctx context.Context, req *comment.CommentRequest) ([]*comment
 	if resp.BaseResp.StatusCode != errno.SuccessCode {
 		return nil, errno.NewErrNo(resp.BaseResp.StatusCode, resp.BaseResp.StatusMsg)
 	}
-	return resp.CommentList, nil
+	return resp.Comment, nil
 }
 
 func CommentList(ctx context.Context, req *comment.CommentListRequest) ([]*comment.Comment, error) {

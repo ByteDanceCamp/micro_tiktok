@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt4 "github.com/golang-jwt/jwt/v4"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -68,8 +69,21 @@ func parseFormToken(c *gin.Context) (*jwt4.Token, error) {
 	var token string
 	var err error
 
-	token, err = jwtFromForm(c, "token")
-
+	methods := strings.Split(Config.TokenLookup, ",")
+	for _, method := range methods {
+		if len(token) > 0 {
+			break
+		}
+		parts := strings.Split(strings.TrimSpace(method), ":")
+		k := strings.TrimSpace(parts[0])
+		v := strings.TrimSpace(parts[1])
+		switch k {
+		case "query":
+			token, err = jwtFromQuery(c, v)
+		case "form":
+			token, err = jwtFromForm(c, v)
+		}
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -93,6 +107,16 @@ func jwtFromForm(c *gin.Context, key string) (string, error) {
 
 	if token == "" {
 		return "", jwt.ErrEmptyParamToken
+	}
+
+	return token, nil
+}
+
+func jwtFromQuery(c *gin.Context, key string) (string, error) {
+	token := c.Query(key)
+
+	if token == "" {
+		return "", jwt.ErrEmptyQueryToken
 	}
 
 	return token, nil

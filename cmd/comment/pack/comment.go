@@ -12,7 +12,7 @@ func Comment(c *db.Comment) *comment.Comment {
 	return &comment.Comment{
 		Id:         int64(c.ID),
 		Content:    c.Content,
-		CreateDate: c.CreatedAt.Format("04-02"),
+		CreateDate: c.CreatedAt.Format("01-02"),
 		User: &comment.User{
 			Id: c.Uid,
 		},

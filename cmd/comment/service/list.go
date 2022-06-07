@@ -4,7 +4,7 @@ import (
 	"context"
 	"micro_tiktok/cmd/comment/dal/db"
 	"micro_tiktok/cmd/comment/pack"
-	"micro_tiktok/cmd/relation/rpc"
+	"micro_tiktok/cmd/comment/rpc"
 	"micro_tiktok/kitex_gen/comment"
 	"micro_tiktok/kitex_gen/user"
 )

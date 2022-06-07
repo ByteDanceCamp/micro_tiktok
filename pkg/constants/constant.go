@@ -4,10 +4,13 @@ const (
 	TablePre            = "ds_"
 	APIServiceName      = "api_service"
 	UserServiceName     = "user_service"
-	RelationServiceName = "relation_service"
+	VideoServiceName    = "video_service"
 	CommentServiceName  = "comment_service"
+	FavoriteServiceName = "favorite_service"
+	RelationServiceName = "relation_service"
 
 	UserTableName          = TablePre + "user"
+	VideoTableName         = TablePre + "video"
 	RelationCountTableName = TablePre + "relation_count"
 	FollowTableName        = TablePre + "follow"
 	FollowerTableName      = TablePre + "follower"
@@ -17,6 +20,8 @@ const (
 	RelationFollowPre = "follow:"
 	RelationFansPre   = "fans:"
 	RelationCountPre  = "count:"
+	FavoriteLikePre   = "like:"
+	FavoriteVideoPre  = "video:"
 
 	UserSalt     = "ByteDanceCamp"
 	JWTSecretKey = "ByteDanceCamp3"
@@ -25,7 +30,7 @@ const (
 	QiNiuAccessKey = "keR1VefVxLVXyfcdg0E0KF4n8k72Ulcwc33fePrf"
 	QiNiuSecretKey = "aKJAUNhALfgj1RqcIwBHd-513_o2yUV-wsh-qQdu"
 	QiNiuBucket    = "micro-tiktok"
-	QiniuServer    = "http://rcyvmul05.hn-bkt.clouddn.com/"
+	QiNiuServer    = "http://data.mtt.dtpark.top/"
 
 	EtcdAddress     = "127.0.0.1:12379"
 	RedisAddress    = "127.0.0.1:16379"

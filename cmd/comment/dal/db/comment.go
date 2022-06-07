@@ -48,11 +48,14 @@ func Publish(ctx context.Context, params *Comment) (res *Comment, err error) {
 	return params, nil
 }
 
-func Delete(ctx context.Context, params *Comment) (err error) {
+func Delete(ctx context.Context, params *Comment, uid int64) (err error) {
 
 	err = DB.Transaction(func(tx *gorm.DB) error {
 		if err = tx.WithContext(ctx).Model(params).Where("id = ?", params.ID).Take(&params).Error; err != nil {
 			return errno.ParamsErr.WithMsg("has been deleted")
+		}
+		if params.Uid != uid {
+			return errno.CommentErr.WithMsg("can't del others comment")
 		}
 		if err = tx.WithContext(ctx).Model(params).Where("id = ?", params.ID).Delete(params.ID).Error; err != nil {
 			return err
@@ -79,8 +82,12 @@ func Delete(ctx context.Context, params *Comment) (err error) {
 }
 
 func GetList(ctx context.Context, params *Comment) (res []*Comment, err error) {
-	if err = DB.WithContext(ctx).Where("video_id = ?", params.VideoId).Find(&params).Error; err != nil {
+	err = DB.WithContext(ctx).Where("video_id = ?", params.VideoId).Find(&res).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
+	}
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return res, nil
 	}
 	return res, nil
 }

@@ -19,9 +19,9 @@ type CommentActionParams struct {
 }
 
 type CommentActionResp struct {
-	StatusCode int64
-	StatusMsg  string
-	Comment    []*Comment
+	StatusCode int64   `json:"status_code"`
+	StatusMsg  string  `json:"status_msg"`
+	Comment    Comment `json:"comment"`
 }
 
 func CommentAction(c *gin.Context) {
@@ -55,6 +55,6 @@ func CommentAction(c *gin.Context) {
 	c.JSON(http.StatusOK, CommentActionResp{
 		StatusCode: e.ErrCode,
 		StatusMsg:  e.ErrMsg,
-		Comment:    CommentsRPC2Gin(res),
+		Comment:    CommentRPC2Gin(res),
 	})
 }

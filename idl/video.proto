@@ -27,7 +27,8 @@ message BaseResponse {
 }
 
 message feedRequest {
-  int64 latest_time = 1; // 可选，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+  int64 uid = 1; // 当前用户 ID
+  int64 latest_time = 2; // 可选，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
 }
 
 message feedResponse {
@@ -40,15 +41,17 @@ message publishRequest {
   string title = 1; // 视频标题
   string play_url = 2; // 视频链接
   string cover_url = 3; // 封面链接
+  int64  Uid = 4; // 作者 ID
 }
 
 message publishResponse {
   BaseResponse base_resp = 1;
 }
 
-// 用于查询发布列表和喜欢列表
+// 用于查询发布列表
 message listRequest {
-  int64 user_id = 1; // 用户 ID
+  int64 user_id = 1; // 当前用户 ID
+  int64 target_uid = 2; // 目标用户 ID
 }
 
 message listResponse {
@@ -56,8 +59,29 @@ message listResponse {
   BaseResponse base_resp = 2; // 状态信息
 }
 
+message mGetRequest {
+  repeated int64 vids = 1; // 视频 ID
+  int64 user_id = 2; // 当前用户 ID
+}
+
+message mGetResponse {
+  repeated Video videos = 1;
+  BaseResponse base_resp = 2;
+}
+
+message QueryByVidRequest {
+  int64 video_id = 1;
+}
+
+message QueryByVidResponse {
+  bool is_exist = 1;
+  BaseResponse base_resp = 2;
+}
+
 service VideoService {
   rpc Feed (feedRequest) returns (feedResponse) {}
   rpc Publish (publishRequest) returns (publishResponse) {}
   rpc List (listRequest) returns (listResponse) {}
+  rpc MGet (mGetRequest) returns (mGetResponse) {}
+  rpc QueryByVid (QueryByVidRequest) returns (QueryByVidResponse) {}
 }

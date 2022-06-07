@@ -8,6 +8,7 @@ import (
 	"micro_tiktok/cmd/comment/rpc"
 	"micro_tiktok/kitex_gen/comment"
 	"micro_tiktok/kitex_gen/user"
+	"micro_tiktok/kitex_gen/video"
 	"micro_tiktok/pkg/errno"
 )
 
@@ -19,7 +20,7 @@ func NewActionService(ctx context.Context) *ActionService {
 	return &ActionService{ctx: ctx}
 }
 
-func (a *ActionService) Action(req *comment.CommentRequest) (res []*comment.Comment, err error) {
+func (a *ActionService) Action(req *comment.CommentRequest) (res *comment.Comment, err error) {
 	switch req.ActionType {
 	case 1:
 		// publish comment
@@ -40,7 +41,11 @@ func (a *ActionService) Action(req *comment.CommentRequest) (res []*comment.Comm
 	}
 }
 
-func (a *ActionService) Publish(req *comment.CommentRequest) (res []*comment.Comment, err error) {
+func (a *ActionService) Publish(req *comment.CommentRequest) (res *comment.Comment, err error) {
+	// 检查视频是否存在
+	if !rpc.QueryByVId(a.ctx, &video.QueryByVidRequest{VideoId: req.VideoId}) {
+		return nil, errno.VideoErr.WithMsg("target video is not exist")
+	}
 	commentDB, err := db.Publish(a.ctx, &db.Comment{
 		VideoId: req.VideoId,
 		Uid:     req.UserId,
@@ -61,7 +66,7 @@ func (a *ActionService) Publish(req *comment.CommentRequest) (res []*comment.Com
 		return nil, errno.UserErr.WithMsg("author don't exist")
 	}
 	ct.User = pack.User(users[0])
-	res = append(res, ct)
+	res = ct
 	return res, nil
 }
 
@@ -70,7 +75,7 @@ func (a *ActionService) Del(req *comment.CommentRequest) (err error) {
 		Model: gorm.Model{
 			ID: uint(req.CommentId),
 		},
-	})
+	}, req.UserId)
 	if err != nil {
 		return err
 	}

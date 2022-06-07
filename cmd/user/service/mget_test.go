@@ -12,8 +12,8 @@ func TestMGetService_MGet(t *testing.T) {
 	dal.Init()
 	rpc.InitRPC()
 	res, err := NewMGet(context.Background()).MGet(&user.MGetUserRequest{
-		TargetUserIds: []int64{2},
-		UserId:        2,
+		TargetUserIds: []int64{1},
+		UserId:        3,
 	})
 	if err != nil {
 		t.Error(err)

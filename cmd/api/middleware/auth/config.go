@@ -12,7 +12,7 @@ import (
 var Config = jwt.GinJWTMiddleware{
 	Key:              []byte(constants.JWTSecretKey),
 	SigningAlgorithm: "HS256",
-	Timeout:          time.Hour,
+	Timeout:          time.Hour * 12 * 14,
 	MaxRefresh:       time.Hour,
 	Authenticator:    nil,
 	Authorizator:     nil,
@@ -30,5 +30,5 @@ var Config = jwt.GinJWTMiddleware{
 			"status_msg":  message,
 		})
 	},
-	TokenLookup: "query: token, param: token",
+	TokenLookup: "query: token, form: token",
 }

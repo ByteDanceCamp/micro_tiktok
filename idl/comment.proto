@@ -31,7 +31,7 @@ message commentRequest {
 }
 
 message commentResponse {
-  repeated Comment comment_list = 1;
+  Comment comment = 1;
   BaseResponse base_resp = 2;
 }
 

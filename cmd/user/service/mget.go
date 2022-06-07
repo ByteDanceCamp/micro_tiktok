@@ -32,6 +32,9 @@ func (m *MGetService) MGet(req *user.MGetUserRequest) ([]*user.User, error) {
 		return nil, errno.UserErr.WithMsg("user isn't exist")
 	}
 	users := pack.Users(urs)
+	//if isExist, err := db.IsExist(m.ctx, req.UserId); err != nil || !isExist {
+	//	return users, nil
+	//}
 	for i, u := range users {
 		countInfo, err := rpc.RelationInfo(m.ctx, &relation.InfoRequest{
 			UserId:       req.UserId,

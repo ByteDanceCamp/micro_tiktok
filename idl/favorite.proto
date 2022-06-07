@@ -22,7 +22,7 @@ message Video {
 }
 
 message BaseResponse {
-  int32 status_code = 1;
+  int64 status_code = 1;
   string status_msg = 2;
 }
 
@@ -37,7 +37,8 @@ message favoriteResponse {
 }
 
 message favoriteListRequest {
-  int64 user_id = 1; // 用户 ID
+  int64 user_id = 1; // 当前用户 ID
+  int64 target_uid = 2;// 目标用户ID
 }
 
 message favoriteListResponse {
@@ -54,8 +55,19 @@ message VideoFavoriteCountResponse {
   BaseResponse base_resp = 2;
 }
 
-service FavoriteVideoServer {
+message IsFavoriteVideoRequest {
+  int64 video_id = 1;
+  int64 user_id = 2;
+}
+
+message IsFavoriteVideoResponse {
+  bool is_favorite = 1;
+  BaseResponse base_resp = 2;
+}
+
+service FavoriteVideoService {
   rpc Favorite (favoriteRequest) returns (favoriteResponse) {}
   rpc FavoriteList (favoriteListRequest) returns (favoriteListResponse) {}
-  rpc Count (VideoFavoriteCountRequest) returns (VideoFavoriteCountResponse) {}
+  rpc GetFavoriteCount (VideoFavoriteCountRequest) returns (VideoFavoriteCountResponse) {}
+  rpc IsFavoriteVideo (IsFavoriteVideoRequest) returns (IsFavoriteVideoResponse) {}
 }

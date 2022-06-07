@@ -31,12 +31,12 @@ func main() {
 		panic(err)
 	}
 	Init()
-	svr := comment2.NewServer(new(CommentVideoServerImpl),
+	svr := comment2.NewServer(new(CommentVideoServiceImpl),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: constants.CommentServiceName}), // server name
-		server.WithServiceAddr(addr),                                                                      // address
-		server.WithLimit(&limit.Option{MaxConnections: 1000, MaxQPS: 100}),                                // limit
-		server.WithMuxTransport(),                                                                         // Multiplex
-		server.WithSuite(trace.NewDefaultServerSuite()),                                                   // tracer
+		server.WithServiceAddr(addr),                                       // address
+		server.WithLimit(&limit.Option{MaxConnections: 1000, MaxQPS: 100}), // limit
+		server.WithMuxTransport(),                                          // Multiplex
+		server.WithSuite(trace.NewDefaultServerSuite()),                    // tracer
 		server.WithRegistry(r),
 	)
 

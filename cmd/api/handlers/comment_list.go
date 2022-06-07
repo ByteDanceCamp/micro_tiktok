@@ -16,9 +16,9 @@ type CommentListParams struct {
 }
 
 type CommentListResp struct {
-	StatusCode int64
-	StatusMsg  string
-	Comment    []*Comment
+	StatusCode int64     `json:"status_code"`
+	StatusMsg  string    `json:"status_msg"`
+	Comment    []Comment `json:"comment_list"`
 }
 
 func CommentList(c *gin.Context) {

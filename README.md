@@ -28,7 +28,6 @@ Micro_tiktok 是基于Kitex开发的一套极简版抖音API，包含用户、�
 │   ├── relation           # 关系模块（关注、粉丝）
 │   ├── user               # 用户模块
 │   └── video              # 视频模块
-             # 其他模块
 ├── docker-compose.yml     # docker compose 配置文件，包括Mysql、Etcd、Jarger、redis
 ├── go.mod                 # go 依赖管理
 ├── go.sum

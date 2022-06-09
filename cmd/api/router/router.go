@@ -34,7 +34,6 @@ func Router(r *gin.Engine) {
 	video := api.Group("/publish")
 	//api.GET("/feed", handlers.Feed)
 	api.GET("/feed", auth.SelectMiddleWare(), handlers.Feed)
-	//api.GET("/feed", handlers.MockVideo)
 	video.POST("/action/", auth.FormMiddleWare(), handlers.VideoPublish)
 
 	video.Use(authMiddleware.JWT.MiddlewareFunc())

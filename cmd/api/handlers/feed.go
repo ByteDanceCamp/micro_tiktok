@@ -20,7 +20,7 @@ type feedResponse struct {
 }
 
 type FeedParam struct {
-	latestTime int64 `form:"latest_time" binding:"number"`
+	LatestTime int64 `form:"latest_time" binding:"number"`
 }
 
 func Feed(c *gin.Context) {
@@ -39,7 +39,7 @@ func Feed(c *gin.Context) {
 	}
 
 	videos, nextTime, err := rpc.Feed(context.Background(), &video.FeedRequest{
-		LatestTime: param.latestTime,
+		LatestTime: param.LatestTime,
 		Uid:        uid,
 	})
 	if err != nil {

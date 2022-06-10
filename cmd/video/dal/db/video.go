@@ -42,8 +42,7 @@ func GetNewestList(ctx context.Context, latestTime int64) ([]*Video, int64, erro
 	if latestTime <= 0 {
 		latestTime = time.Now().Unix()
 	}
-	a := time.Unix(latestTime, 0)
-	if result := DB.WithContext(ctx).Where("updated_at < ?", a).Order("updated_at desc").Limit(30).Find(&res); result.Error != nil {
+	if result := DB.WithContext(ctx).Where("updated_at <= ?", time.Unix(latestTime, 0).Local()).Order("updated_at desc").Limit(5).Find(&res); result.Error != nil {
 		return nil, 0, result.Error
 	}
 	var nextTime int64

@@ -37,7 +37,7 @@ type User struct {
 
 type Comment struct {
 	ID         int64  `json:"id"`
-	User       User   `json:"user"`
+	User       *User  `json:"user"`
 	Content    string `json:"content"`
 	CreateDate string `json:"create_date"`
 }
@@ -83,6 +83,9 @@ func UsersRPC2Gin(users []*user.User) []*User {
 }
 
 func CommentUserRPC2Gin(user *comment.User) *User {
+	if user == nil {
+		return nil
+	}
 	return &User{
 		ID:            user.Id,
 		Name:          user.Name,
@@ -141,17 +144,20 @@ func RelationUsersRPC2Gin(users []*relation.User) []*User {
 	return us
 }
 
-func CommentRPC2Gin(c *comment.Comment) Comment {
-	return Comment{
+func CommentRPC2Gin(c *comment.Comment) *Comment {
+	if c == nil {
+		return nil
+	}
+	return &Comment{
 		ID:         c.Id,
-		User:       *CommentUserRPC2Gin(c.User),
+		User:       CommentUserRPC2Gin(c.User),
 		Content:    c.Content,
 		CreateDate: c.CreateDate,
 	}
 }
 
-func CommentsRPC2Gin(cs []*comment.Comment) []Comment {
-	counts := make([]Comment, 0)
+func CommentsRPC2Gin(cs []*comment.Comment) []*Comment {
+	counts := make([]*Comment, 0)
 	for _, v := range cs {
 		counts = append(counts, CommentRPC2Gin(v))
 	}

@@ -16,9 +16,9 @@ type CommentListParams struct {
 }
 
 type CommentListResp struct {
-	StatusCode int64     `json:"status_code"`
-	StatusMsg  string    `json:"status_msg"`
-	Comment    []Comment `json:"comment_list"`
+	StatusCode int64      `json:"status_code"`
+	StatusMsg  string     `json:"status_msg"`
+	Comment    []*Comment `json:"comment_list"`
 }
 
 func CommentList(c *gin.Context) {
@@ -46,7 +46,7 @@ func CommentList(c *gin.Context) {
 		return
 	}
 	e := errno.Success
-	c.JSON(http.StatusOK, CommentListResp{
+	c.JSON(http.StatusOK, &CommentListResp{
 		StatusCode: e.ErrCode,
 		StatusMsg:  e.ErrMsg,
 		Comment:    CommentsRPC2Gin(res),

@@ -19,9 +19,9 @@ type CommentActionParams struct {
 }
 
 type CommentActionResp struct {
-	StatusCode int64   `json:"status_code"`
-	StatusMsg  string  `json:"status_msg"`
-	Comment    Comment `json:"comment"`
+	StatusCode int64    `json:"status_code"`
+	StatusMsg  string   `json:"status_msg"`
+	Comment    *Comment `json:"comment"`
 }
 
 func CommentAction(c *gin.Context) {

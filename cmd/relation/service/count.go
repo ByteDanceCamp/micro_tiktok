@@ -90,6 +90,9 @@ func (c *CountService) CountInfo(req *relation.InfoRequest) (res *relation.Count
 }
 
 func (c *CountService) IsFollow(req *relation.InfoRequest) (res bool, err error) {
+	if req.UserId <= 0 {
+		return false, nil
+	}
 	isFollow, e := redis.IsFollow(c.ctx, &redis.ActionParams{
 		Uid:   req.UserId,
 		ToUid: req.TargetUserId,

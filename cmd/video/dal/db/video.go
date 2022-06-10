@@ -40,16 +40,16 @@ func GetMyList(ctx context.Context, userId int64) ([]*Video, error) {
 func GetNewestList(ctx context.Context, latestTime int64) ([]*Video, int64, error) {
 	res := make([]*Video, 0)
 	if latestTime <= 0 {
-		latestTime = time.Now().Unix()
+		latestTime = time.Now().UnixNano() / 1e6
 	}
-	if result := DB.WithContext(ctx).Where("updated_at <= ?", time.Unix(latestTime, 0).Local()).Order("updated_at desc").Limit(5).Find(&res); result.Error != nil {
+	if result := DB.WithContext(ctx).Where("updated_at <= ?", time.Unix(0, latestTime*1e6).Local()).Order("updated_at desc").Limit(5).Find(&res); result.Error != nil {
 		return nil, 0, result.Error
 	}
 	var nextTime int64
 	if len(res) > 0 {
-		nextTime = res[len(res)-1].CreatedAt.Unix()
+		nextTime = res[len(res)-1].CreatedAt.UnixNano() / 1e6
 	} else {
-		nextTime = time.Now().Unix()
+		nextTime = time.Now().UnixNano() / 1e6
 	}
 
 	return res, nextTime, nil

@@ -8,6 +8,7 @@ Micro_tiktok 是基于Kitex开发的一套极简版抖音API，包含用户、�
 - 说明文档地址：https://t5pn33186b.feishu.cn/docs/doccn5qygcgKFjejI3qDIj51Ukg
 - apk: https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7
 - API文档：https://www.apifox.cn/apidoc/shared-8cc50618-0da6-4d5e-a398-76f3b8f766c5/api-18345145
+> ！！！【注意】！！！ API 文档中 douyin/feed 接口的参数 latest_time 标注精确到秒，实际上发送的为 13 位精确到毫秒的时间戳
 
 > 【注】安全起见，仓库中的七牛云密钥对已停用，加密用盐等信息也与服务器中不同
 
